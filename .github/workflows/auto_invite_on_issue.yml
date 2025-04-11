@@ -35,7 +35,7 @@ jobs:
 
     - name: Comment and close the issue
       env:
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GH_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
