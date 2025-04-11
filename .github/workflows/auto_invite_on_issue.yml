@@ -33,7 +33,7 @@ jobs:
           https://api.github.com/orgs/$ORG_NAME/invitations \
           -d "{\"invitee_id\":$USER_ID,\"role\":\"direct_member\"}"
 
-        - name: Comment and close the issue
+    - name: Comment and close the issue
       env:
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         REPO: ${{ github.repository }}
