@@ -12,7 +12,7 @@ jobs:
     steps:
     - name: Get user ID and invite
       env:
-        GH_TOKEN: ${{ secrets.ORG_INVITE_TOKEN }}
+        GH_TOKEN: ${{ secrets.ORG_INVITATION_TOKEN }}
         ORG_NAME: CCUnipd1  # <-- cambia con il nome della tua org
       run: |
         USERNAME=${{ github.event.issue.user.login }}
@@ -38,7 +38,7 @@ jobs:
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
-        echo "${{ secrets.ORG_INVITE_TOKEN }}" | gh auth login --with-token
+        echo "${{ secrets.ORG_INVITATION_TOKEN }}" | gh auth login --with-token
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
         gh issue close "$ISSUE_NUMBER" --repo "$REPO"
 
