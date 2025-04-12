@@ -39,8 +39,7 @@ jobs:
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
-        echo "$GH_TOKEN" | gh auth login --with-token --hostname github.com
-
+       
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
         gh issue close "$ISSUE_NUMBER" --repo "$REPO"
 
