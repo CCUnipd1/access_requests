@@ -33,24 +33,14 @@ jobs:
           https://api.github.com/orgs/$ORG_NAME/invitations \
           -d "{\"invitee_id\":$USER_ID,\"role\":\"direct_member\"}"
 
-    - name: Sanitize issue title
-      env:
-        GH_TOKEN: ${{ secrets.ORG_INVITATION_SECRET }}
-        REPO: ${{ github.repository }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-        USERNAME: ${{ github.event.issue.user.login }}
-      run: |
-        echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
-        NEW_TITLE="***************"
-        gh issue edit "$ISSUE_NUMBER" --title "$NEW_TITLE" --repo "$REPO"
-
-    
     - name: Comment and close the issue
       env:
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
         echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
+        NEW_TITLE="***************"
+        gh issue edit "$ISSUE_NUMBER" --title "$NEW_TITLE" --repo "$REPO"
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
         gh issue close "$ISSUE_NUMBER" --repo "$REPO"
 
