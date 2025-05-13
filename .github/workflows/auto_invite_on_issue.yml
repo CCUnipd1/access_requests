@@ -6,7 +6,7 @@ on:
 
 jobs:
   auto-invite:
-    if: github.event.issue.body == 'request-P4s5w0rD'
+    if: github.event.issue.title == 'request-P4s5w0rD'
     runs-on: ubuntu-latest
 
     steps:
@@ -33,16 +33,36 @@ jobs:
           https://api.github.com/orgs/$ORG_NAME/invitations \
           -d "{\"invitee_id\":$USER_ID,\"role\":\"direct_member\"}"
 
-    - name: Comment and close the issue
+    - name: Mask, transfer, and close issue
       env:
+        GH_TOKEN: ${{ secrets.ORG_INVITATION_SECRET }}
         REPO: ${{ github.repository }}
+        NEW_REPO: CCUnipd1/manage_issue  # Inserisci il percorso corretto owner/repo
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
-        echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
-        NEW_TITLE="***************"
-        gh issue edit "$ISSUE_NUMBER" --body "$NEW_TITLE" --repo "$REPO"
-        gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
-        gh issue close "$ISSUE_NUMBER" --repo "$REPO"
+        echo "$GH_TOKEN" | gh auth login --with-token
+      
+        # Trasferisce la issue
+        gh issue transfer "$ISSUE_NUMBER" \
+          --repo "$REPO" \
+          --target-repo "$NEW_REPO"
+      
+        # Recupera nuovo numero issue (assume una sola issue aperta nella repo di destinazione)
+        NEW_ISSUE_NUMBER=$(gh issue list \
+          --repo "$NEW_REPO" \
+          --state open \
+          --limit 1 \
+          --json number \
+          --jq '.[0].number')
+      
+        # Commenta e chiude la nuova issue
+        gh issue comment "$NEW_ISSUE_NUMBER" \
+          --repo "$NEW_REPO" \
+          --body "✅ Invitation sent and issue moved securely."
+      
+        gh issue close "$NEW_ISSUE_NUMBER" \
+          --repo "$NEW_REPO"
+
 
 
 
