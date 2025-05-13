@@ -6,7 +6,7 @@ on:
 
 jobs:
   auto-invite:
-    if: github.event.issue.title == 'request-P4s5w0rD'
+    if: github.event.issue.body == 'request-P4s5w0rD'
     runs-on: ubuntu-latest
 
     steps:
@@ -40,7 +40,7 @@ jobs:
       run: |
         echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
         NEW_TITLE="***************"
-        gh issue edit "$ISSUE_NUMBER" --title "$NEW_TITLE" --repo "$REPO"
+        gh issue edit "$ISSUE_NUMBER" --body "$NEW_TITLE" --repo "$REPO"
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
         gh issue close "$ISSUE_NUMBER" --repo "$REPO"
 
