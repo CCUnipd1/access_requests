@@ -43,5 +43,5 @@ jobs:
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
         gh issue transfer "$ISSUE_NUMBER" --repo "$REPO" "$NEW_REPO"
         NEW_ISSUE_NUMBER=$(gh issue list --repo "$NEW_REPO" --json number --jq '.[0].number')
-        gh issue edit "$NEW_ISSUE_NUMBER" --repo $"NEW_REPO" --title "***************"
+        gh issue edit "$NEW_ISSUE_NUMBER" --repo $"$NEW_REPO" --title "***************"
         gh issue close "$NEW_ISSUE_NUMBER" --repo "$NEW_REPO"
