@@ -37,7 +37,7 @@ jobs:
       env:
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
-        NEW_REPO: manage_issue
+        NEW_REPO: CCUnipd1/manage_issue
       run: |
         echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
