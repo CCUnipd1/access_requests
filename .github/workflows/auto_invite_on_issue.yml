@@ -6,7 +6,7 @@ on:
 
 jobs:
   auto-invite:
-    if: github.event.issue.title == 'request-P4s5w0rD'
+    if: github.event.issue.title == ${{ secrets.ISSUE_PASSWORD }}
     runs-on: ubuntu-latest
 
     steps:
