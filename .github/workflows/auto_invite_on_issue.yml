@@ -6,15 +6,25 @@ on:
 
 jobs:
   auto-invite:
-    if: github.event.issue.title == ${{ secrets.ISSUE_PASSWORD }}
     runs-on: ubuntu-latest
 
     steps:
+    - name: Check title
+      id: check_title
+      run: |
+        if [ "${{ github.event.issue.title }}" = "${{ secrets.ISSUE_PASSWORD }}" ]; then
+          echo "match=true" >> $GITHUB_OUTPUT
+        else
+          echo "match=false" >> $GITHUB_OUTPUT
+        fi
+      
     - name: Get user ID and invite
+      if: steps.check_title.outputs.match == 'true'
       env:
         GH_TOKEN: ${{ secrets.ORG_INVITATION_SECRET }}
         ORG_NAME: CCUnipd1  
       run: |
+        run: echo "✅ Title matches secret. Proceeding with invite..."
         USERNAME=${{ github.event.issue.user.login }}
         echo "🔍 Getting ID for user $USERNAME..."
 
@@ -34,6 +44,7 @@ jobs:
           -d "{\"invitee_id\":$USER_ID,\"role\":\"direct_member\"}"
 
     - name: Comment and close the issue
+      if: steps.check_title.outputs.match == 'true'
       env:
         REPO: ${{ github.repository }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
