@@ -33,36 +33,11 @@ jobs:
           https://api.github.com/orgs/$ORG_NAME/invitations \
           -d "{\"invitee_id\":$USER_ID,\"role\":\"direct_member\"}"
 
-    - name: Mask, transfer, and close issue
+    - name: Comment and close the issue
       env:
-        GH_TOKEN: ${{ secrets.ORG_INVITATION_SECRET }}
         REPO: ${{ github.repository }}
-        NEW_REPO: CCUnipd1/manage_issue  # Inserisci il percorso corretto owner/repo
         ISSUE_NUMBER: ${{ github.event.issue.number }}
       run: |
-        echo "$GH_TOKEN" | gh auth login --with-token
-      
-        # Trasferisce la issue
-        gh issue transfer "$ISSUE_NUMBER" \
-          --repo "$REPO" \
-          --target-repo "$NEW_REPO"
-      
-        # Recupera nuovo numero issue (assume una sola issue aperta nella repo di destinazione)
-        NEW_ISSUE_NUMBER=$(gh issue list \
-          --repo "$NEW_REPO" \
-          --state open \
-          --limit 1 \
-          --json number \
-          --jq '.[0].number')
-      
-        # Commenta e chiude la nuova issue
-        gh issue comment "$NEW_ISSUE_NUMBER" \
-          --repo "$NEW_REPO" \
-          --body "✅ Invitation sent and issue moved securely."
-      
-        gh issue close "$NEW_ISSUE_NUMBER" \
-          --repo "$NEW_REPO"
-
-
-
-
+        echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
+        gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
+        gh issue close "$ISSUE_NUMBER" --repo "$REPO"
