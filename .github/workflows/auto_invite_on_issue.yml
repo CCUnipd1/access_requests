@@ -41,4 +41,4 @@ jobs:
       run: |
         echo "${{ secrets.ORG_INVITATION_SECRET }}" | gh auth login --with-token
         gh issue comment "$ISSUE_NUMBER" --repo "$REPO" --body "✅ Invitation sent!"
-        gh issue transfer "$ISSUE_NUMBER" "$NEW_REPO"
+        gh issue transfer "$ISSUE_NUMBER" --repo "$REPO" "$NEW_REPO"
