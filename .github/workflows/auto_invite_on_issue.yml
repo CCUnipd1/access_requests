@@ -24,7 +24,7 @@ jobs:
         GH_TOKEN: ${{ secrets.ORG_INVITATION_SECRET }}
         ORG_NAME: CCUnipd1  
       run: |
-        run: echo "✅ Title matches secret. Proceeding with invite..."
+        echo "✅ Title matches secret. Proceeding with invite..."
         USERNAME=${{ github.event.issue.user.login }}
         echo "🔍 Getting ID for user $USERNAME..."
 
